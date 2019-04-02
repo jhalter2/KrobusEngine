@@ -16,6 +16,7 @@ Visualizer::Visualizer() {
 
 Visualizer::~Visualizer() {
 	DebugMsg::out("deleted visualizer singleton\n");
+	delete WFUnitSphere;
 }
 
 void Visualizer::privRenderBSphere(Matrix& S) {
