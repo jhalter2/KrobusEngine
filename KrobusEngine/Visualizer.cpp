@@ -15,6 +15,7 @@ Visualizer::Visualizer() {
 }
 
 Visualizer::~Visualizer() {
+	delete Instance().WFUnitSphere;
 	DebugMsg::out("deleted visualizer singleton\n");
 }
 
@@ -50,7 +51,6 @@ void Visualizer::ShowBSphere(const CollisionVolumeBSphere& S, const Vect& col) {
 }
 
 void Visualizer::Terminate() {
-	delete Instance().WFUnitSphere;
 	delete ptrInstance;
 	ptrInstance = nullptr;
 }

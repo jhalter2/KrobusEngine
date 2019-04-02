@@ -16,10 +16,12 @@ void AlarmableManager::ProcessAlarms() {
 	float seconds = TimeManager::GetTime();
 	//process all alarms that need to go off
 	while (it != timeline.end()) {
+		//keep checking alarms only if the first one is triggered (since list is ordered)
 		if (seconds >= it->first) {
 			AlarmableAttorney::TriggerAlarm(it->second.first, it->second.second);
 			it = timeline.begin();
 		}
+		//if first one doesn't pass then break the loop
 		else {
 			break;
 		}

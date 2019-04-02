@@ -8,8 +8,12 @@ DrawableManager::~DrawableManager() {
 }
 
 void DrawableManager::ProcessElements() {
+	//draw 3d elements
 	for (StorageList::iterator it = storageList.begin(); it != storageList.end(); it++) {
 		DrawableAttorney::GameLoop::Draw(*it);
+	}
+	//draw 2d elements
+	for (StorageList::iterator it = storageList.begin(); it != storageList.end(); it++) {
 		DrawableAttorney::GameLoop::Draw2D(*it);
 	}
 }
