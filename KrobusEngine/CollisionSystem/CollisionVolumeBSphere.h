@@ -1,8 +1,9 @@
 #ifndef _CollisionVolumeBSphere
 #define _CollisionVolumeBSphere
-
-#include "AzulCore.h"
 #include "CollisionVolume.h"
+
+class CollisionVolumeAABB;
+class CollisionVolumeOBB;
 
 class CollisionVolumeBSphere : public CollisionVolume, public Align16 {
 public:
@@ -11,9 +12,12 @@ public:
 	CollisionVolumeBSphere& operator=(const CollisionVolumeBSphere&) = delete;
 	~CollisionVolumeBSphere();
 
-	void ComputeData(Model* mod, Matrix& mat, const float scale);
-	//bool Intersect(const CollisionVolume& other);
-	bool Intersect(const CollisionVolumeBSphere& other);
+	void ComputeData(Model* mod, Matrix& mat, const float scale) override;
+	void DebugView(const Vect& col) const override;
+	bool IntersectAccept(const CollisionVolume& other) const override;
+	bool IntersectVisit(const CollisionVolumeBSphere& other) const override;
+	bool IntersectVisit(const CollisionVolumeAABB& other) const override;
+	bool IntersectVisit(const CollisionVolumeOBB& other) const override;
 	const Vect& GetCenter() const;
 	float GetRadius() const;
 
