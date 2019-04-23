@@ -1,5 +1,8 @@
 #include "CollisionVolumeBSphere.h"
+#include "CollisionVolumeAABB.h"
+#include "CollisionVolumeOBB.h"
 #include "PWMathTools.h"
+#include "Visualizer.h"
 
 CollisionVolumeBSphere::~CollisionVolumeBSphere() {
 	DebugMsg::out("deleted BSphere\n");
@@ -11,11 +14,23 @@ void CollisionVolumeBSphere::ComputeData(Model* mod, Matrix& mat, const float sc
 	Radius = mod->getRadius() * scale;
 }
 
-//bool CollisionVolumeBSphere::Intersect(const CollisionVolume& other) {
-//
-//}
+void CollisionVolumeBSphere::DebugView(const Vect& col) const {
+	Visualizer::ShowBSphere(*this, col);
+}
 
-bool CollisionVolumeBSphere::Intersect(const CollisionVolumeBSphere& other) {
+bool CollisionVolumeBSphere::IntersectAccept(const CollisionVolume& other) const {
+	return other.IntersectVisit(*this);
+}
+
+bool CollisionVolumeBSphere::IntersectVisit(const CollisionVolumeBSphere& other) const {
+	return PWMathTools::Intersect(*this, other);
+}
+
+bool CollisionVolumeBSphere::IntersectVisit(const CollisionVolumeAABB& other) const {
+	return PWMathTools::Intersect(*this, other);
+}
+
+bool CollisionVolumeBSphere::IntersectVisit(const CollisionVolumeOBB& other) const {
 	return PWMathTools::Intersect(*this, other);
 }
 
