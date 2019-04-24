@@ -1,12 +1,13 @@
 #ifndef _CollisionVolumeAABB
 #define _CollisionVolumeAABB
 
-#include "CollisionVolume.h"
+#include "AzulCore.h"
+#include "CollisionVolumeBoundingBoxBase.h"
 
 class CollisionVolumeBSphere;
 class CollisionVolumeOBB;
 
-class CollisionVolumeAABB : public CollisionVolume, public Align16 {
+class CollisionVolumeAABB : public CollisionVolumeBoundingBoxBase {
 public:
 	CollisionVolumeAABB() = default;
 	CollisionVolumeAABB(const CollisionVolumeAABB&) = delete;
@@ -19,12 +20,6 @@ public:
 	bool IntersectVisit(const CollisionVolumeBSphere& other) const override;
 	bool IntersectVisit(const CollisionVolumeAABB& other) const override;
 	bool IntersectVisit(const CollisionVolumeOBB& other) const override;
-	const Vect& GetCornerMax() const;
-	const Vect& GetCornerMin() const;
-
-private:
-	Vect CornerMax;
-	Vect CornerMin;
 };
 
 #endif _CollisionVolumeAABB
