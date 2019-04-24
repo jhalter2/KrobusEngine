@@ -1,13 +1,12 @@
-#ifndef _CollisionVolumeOBB
+ifndef _CollisionVolumeOBB
 #define _CollisionVolumeOBB
 
-#include "CollisionVolume.h"
+#include "CollisionVolumeBoundingBoxBase.h"
 
 class CollisionVolumeBSphere;
 class CollisionVolumeAABB;
 
-class CollisionVolumeOBB : public Align16, public CollisionVolume
-{
+class CollisionVolumeOBB : public CollisionVolumeBoundingBoxBase {
 public:
 	CollisionVolumeOBB() = default;
 	CollisionVolumeOBB(const CollisionVolumeOBB&) = delete;
@@ -20,20 +19,6 @@ public:
 	bool IntersectVisit(const CollisionVolumeBSphere& other) const override;
 	bool IntersectVisit(const CollisionVolumeAABB& other) const override;
 	bool IntersectVisit(const CollisionVolumeOBB& other) const override;
-	const Vect& GetCornerMax() const;
-	const Vect& GetCornerMin() const;
-	const Matrix& GetWorld() const;
-	const Vect& GetCenterInWorld() const;
-	const float GetScaleSquared() const;
-	const Vect& GetHalfDiagonal() const;
-
-private:
-	Matrix world;
-	Vect CornerMax;
-	Vect CornerMin;
-	Vect CenterInWorld;
-	Vect HalfDiagonal;
-	float ScaleSquared;
 };
 
 #endif _CollisionVolumeOBB
