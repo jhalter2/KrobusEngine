@@ -5,6 +5,7 @@
 #include "CollisionVolumeBSphere.h"
 #include "CollisionVolumeAABB.h"
 #include "CollisionVolumeOBB.h"
+#include <cmath>
 #include <cfloat>
 
 class PWMathTools {
@@ -56,8 +57,26 @@ public:
 		return PointInBSphere(newPoint, B);
 	}
 
-	static bool Intersect(const CollisionVolumeOBB&, const CollisionVolumeAABB&) {
-		return false;
+	static bool Intersect(const CollisionVolumeOBB& A, const CollisionVolumeAABB& B) {
+		//collision detection between obb and obb
+		//using satisfying axis theorem 
+		//need to check overlap on 15 total axes
+		//get face normals for each obb = 6 more axes
+		Vect axes[15];
+		SATVects(A.GetWorld(), B.GetWorld(), axes);
+
+		//cross products of the 3x3 face normals = 9 more axes
+		Get9AxesCrossProducts(axes);
+
+		//test overlaps for every axis
+		for (int i = 0; i < 15; i++) {
+			if (axes[i].magSqr() > FLT_EPSILON) {
+				if (!OBBOverlapAxis(A, B, axes[i]))
+					return false;
+			}
+		}
+
+		return true;
 	}
 
 	static bool Intersect(const CollisionVolumeOBB& A, const CollisionVolumeOBB& B) {
@@ -84,19 +103,41 @@ public:
 
 	static bool OBBOverlapAxis(const CollisionVolumeOBB& ob1, const CollisionVolumeOBB& ob2, const Vect& v) {
 		//test if obb1 and obb2 overlap along axis v
-		float d = (fabsf((ob2.GetCenterInWorld() - ob1.GetCenterInWorld()).dot(v)))/v.mag();
+		//float D = (abs(((ob2.GetCenterInWorld() * ob2.GetWorld()) - (ob1.GetCenterInWorld() * ob1.GetWorld())).dot(v))) / v.mag();
+		float D = (abs((ob2.GetCenterInWorld() - ob1.GetCenterInWorld()).dot(v)))/v.mag();
 		float p1 = OBBMaxProjection(ob1, v);
 		float p2 = OBBMaxProjection(ob2, v);
-		return (d <= (p1 + p2));
+		return (D <= (p1 + p2));
 	}
 
 	static float OBBMaxProjection(const CollisionVolumeOBB& ob, const Vect& v) {
 		//get obb projection length on axis v
 		Vect localV = v * ob.GetWorld().getInv();
 		Vect d = ob.GetHalfDiagonal();
-		float xPrime = fabsf(localV.X() * d.X());
-		float yPrime = fabsf(localV.Y() * d.Y());
-		float projMax =  (xPrime + yPrime) / v.mag();
+		float xPrime = abs(localV.X() * d.X());
+		float yPrime = abs(localV.Y() * d.Y());
+		float zPrime = abs(localV.Z() * d.Z());
+		float projMax =  (xPrime + yPrime + zPrime) / localV.mag();
+		return ob.GetScaleSquared() * projMax;
+	}
+
+	static bool OBBOverlapAxis(const CollisionVolumeOBB& ob1, const CollisionVolumeAABB& ob2, const Vect& v) {
+		//test if obb1 and obb2 overlap along axis v
+		//float D = (abs(((ob2.GetCenterInWorld() * ob2.GetWorld()) - (ob1.GetCenterInWorld() * ob1.GetWorld())).dot(v))) / v.mag();
+		float D = (abs((ob2.GetCenterInWorld() - ob1.GetCenterInWorld()).dot(v))) / v.mag();
+		float p1 = OBBMaxProjection(ob1, v);
+		float p2 = OBBMaxProjection(ob2, v);
+		return (D <= (p1 + p2));
+	}
+
+	static float OBBMaxProjection(const CollisionVolumeAABB& ob, const Vect& v) {
+		//get obb projection length on axis v
+		Vect localV = v * ob.GetWorld().getInv();
+		Vect d = ob.GetHalfDiagonal();
+		float xPrime = abs(localV.X() * d.X());
+		float yPrime = abs(localV.Y() * d.Y());
+		float zPrime = abs(localV.Z() * d.Z());
+		float projMax = (xPrime + yPrime + zPrime) / localV.mag();
 		return ob.GetScaleSquared() * projMax;
 	}
 
@@ -104,35 +145,39 @@ public:
 		//get face normals for each obb = 6 more axes
 		//use with obb collision
 		//need to manually set each so w doesn't change to 0
-		Vect v = w1.get(ROW_0);
-		axes[0].set(v.X(), v.Y(), v.Z());
-		v = w1.get(ROW_1);
-		axes[1].set(v.X(), v.Y(), v.Z());
-		v = w1.get(ROW_2);
-		axes[2].set(v.X(), v.Y(), v.Z());
+		axes[0].set(w1.get(ROW_0));
+		axes[1].set(w1.get(ROW_1));
+		axes[2].set(w1.get(ROW_2));
 		
-		v = w2.get(ROW_0);
-		axes[3].set(v.X(), v.Y(), v.Z());
-		v = w2.get(ROW_1);
-		axes[4].set(v.X(), v.Y(), v.Z());
-		v = w2.get(ROW_2);
-		axes[5].set(v.X(), v.Y(), v.Z());
+		axes[3].set(w2.get(ROW_0));
+		axes[4].set(w2.get(ROW_1));
+		axes[5].set(w2.get(ROW_2));
 	}
 
 	static void Get9AxesCrossProducts(Vect (&axes)[15]) {
 		//cross products of the 3x3 face normals = 9 more axes
 		//use with obb collision
-		axes[6] = axes[0].cross(axes[3]);
-		axes[7] = axes[0].cross(axes[4]);
-		axes[8] = axes[0].cross(axes[5]);
-
-		axes[9] = axes[1].cross(axes[3]);
-		axes[10] = axes[1].cross(axes[4]);
-		axes[11] = axes[1].cross(axes[5]);
+		//need to always zero out W value when doing cross product
+		axes[6].set(axes[0].cross(axes[3]));
+		axes[6].W() = 0;
+		axes[7].set(axes[0].cross(axes[4]));
+		axes[7].W() = 0;
+		axes[8].set(axes[0].cross(axes[5]));
+		axes[8].W() = 0;
 		
-		axes[12] = axes[2].cross(axes[3]);
-		axes[13] = axes[2].cross(axes[4]);
-		axes[14] = axes[2].cross(axes[5]);
+		axes[9].set(axes[1].cross(axes[3]));
+		axes[9].W() = 0;
+		axes[10].set(axes[1].cross(axes[4]));
+		axes[10].W() = 0;
+		axes[11].set(axes[1].cross(axes[5]));
+		axes[11].W() = 0;
+
+		axes[12].set(axes[2].cross(axes[3]));
+		axes[12].W() = 0;
+		axes[13].set(axes[2].cross(axes[4]));
+		axes[13].W() = 0;
+		axes[14].set(axes[2].cross(axes[5]));
+		axes[14].W() = 0;
 	}
 
 	static void VectorProjection(const Vect& v1, const Vect& v2, Vect& projVect) {
