@@ -13,8 +13,15 @@ void CollisionVolumeAABB::ComputeData(Model* mod, Matrix& mat, const float scale
 	PWMathTools::GetMaxWorldVect(mod->getVectList(), mod->getVectNum(), newMax);
 	Vect newMin;
 	PWMathTools::GetMinWorldVect(mod->getVectList(), mod->getVectNum(), newMin);
-	CornerMax = (scale * (newMax)) * mat;
-	CornerMin = (scale * (newMin)) * mat;
+	CornerMax = (scale * (newMax));
+	CornerMin = (scale * (newMin));
+	HalfDiagonal = 0.5f * (CornerMax - CornerMin);
+	CenterInWorld = (CornerMin + HalfDiagonal) * mat;
+	ScaleSquared = mat.get(ROW_2).magSqr();
+	world = mat;
+	Scale = scale;
+	CornerMax *= mat;
+	CornerMin *= mat;
 }
 
 void CollisionVolumeAABB::DebugView(const Vect& col) const {
@@ -35,12 +42,4 @@ bool CollisionVolumeAABB::IntersectVisit(const CollisionVolumeAABB& other) const
 
 bool CollisionVolumeAABB::IntersectVisit(const CollisionVolumeOBB& other) const {
 	return PWMathTools::Intersect(*this, other);
-}
-
-const Vect& CollisionVolumeAABB::GetCornerMax() const {
-	return CornerMax;
-}
-
-const Vect& CollisionVolumeAABB::GetCornerMin() const {
-	return CornerMin;
 }
