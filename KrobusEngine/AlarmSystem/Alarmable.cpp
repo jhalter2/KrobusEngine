@@ -2,8 +2,11 @@
 #include "RegistrationState.h"
 #include "SceneManager.h"
 #include "Scene.h"
-#include "AzulCore.h"
 #include "SceneAttorney.h"
+
+//Alarmable is one of the base classes for the GameObject class.
+//Alarmable allows the object to be registered for the timer/alarm
+//system to process time-based events. 
 
 Alarmable::Alarmable() {
 	for (int i = 0; i < AlarmableManager::ALARM_NUMBER; i++) {
@@ -22,12 +25,19 @@ Alarmable::~Alarmable() {
 	DebugMsg::out("alarmable deleted\n");
 }
 
+//Alarmables can register for time-based events with
+//parameters seconds,ID number. For example I can do AlarmRegistration(2.0, 0)
+//which will register AlarmID 0 to trigger in 2 seconds. If I wish to repeat
+//the alarm process then I can call the alarm again within the activation function
 void Alarmable::AlarmRegistration(float t, AlarmableManager::ALARM_ID id) {
 	assert(RegData[id].RegStateCurr == RegistrationState::PENDING_REGISTRATION);
 	RegData[id].pMyDeleteRef = SceneAttorney::GetAlarmMgr()->Register(t, this, id);
 	RegData[id].RegStateCurr = RegistrationState::CURRENTLY_REGISTERED;
 }
 
+//WARNING: if an object with an ACTIVE alarm is destroyed before the
+//scene changes or ends, then you must manually deregister its alarm.
+//see SceneExit() under GameObject() for more info
 void Alarmable::AlarmDeregistration(AlarmableManager::ALARM_ID id) {
 	assert(RegData[id].RegStateCurr == RegistrationState::PENDING_DEREGISTRATION);
 	SceneAttorney::GetAlarmMgr()->Deregister(RegData[id].pMyDeleteRef);
