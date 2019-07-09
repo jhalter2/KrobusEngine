@@ -1,6 +1,7 @@
 #ifndef _TextureManager
 #define _TextureManager
 
+#include <windows.h>
 #include <string>
 #include <map>
 
@@ -26,8 +27,7 @@ private:
 
 	typedef std::string string;
 	typedef std::map<string, Texture*> StorageMap;
-	void privLoad(string name, string texture);
-	void privLoad(string name, unsigned char r, unsigned char g, unsigned char b);
+	void privLoad(string name, LPCWSTR texture);
 	Texture* privGet(string name);
 
 	StorageMap storageMap;
@@ -35,7 +35,7 @@ private:
 	static void Terminate();
 
 public:
-	static const string DefaultPath;
+	static const LPCWSTR DefaultPath;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static void TextureManager::Load(string name, string texture)
@@ -61,32 +61,7 @@ public:
 	/// \param	texture	The texture.
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	static void Load(string name, string texture) { Instance().privLoad(name, texture); };
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	/// \fn	static void TextureManager::Load(string name, string texture)
-	///
-	/// \brief	Loads a texture
-	///
-	/// This is the method used to load a single pixel texture. Add in the rgb values after the texture name
-	/// All asset loading should be done in the KrobusEngine::LoadResources() function.
-	/// 
-	///  EXAMPLE:
-	/// \code
-	/// 	 KrobusEngine::LoadResources(){
-	/// 		//gets a white texture
-	/// 		TextureManager::Load("terrainTexture", 1.0f, 1.0f, 1.0f);
-	/// 		groundTexture = TextureManager::Get("terrainTexture");
-	/// 	 }
-	/// \endcode
-	/// 		
-	/// \author	jehalter
-	/// \date	3/17/2019
-	///
-	/// \param	name   	The name.
-	/// \param	texture	The texture.
-	////////////////////////////////////////////////////////////////////////////////////////////////////
-	static void Load(string name, unsigned char r, unsigned char g, unsigned char b) { Instance().privLoad(name, r, g, b); };
+	static void Load(string name, LPCWSTR texture) { Instance().privLoad(name, texture); };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static Texture* TextureManager::Get(string name)
@@ -113,4 +88,3 @@ public:
 	static Texture* Get(string name) { return Instance().privGet(name); };
 };
 
-#endif
