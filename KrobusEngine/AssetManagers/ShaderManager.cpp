@@ -1,52 +1,109 @@
-#include "AzulCore.h"
 #include "ShaderManager.h"
+#include "ShaderBase.h"
+#include "ShaderMultiPointlight.h"
+#include "ShaderColorLight.h"
+#include "ShaderTexture.h"
+#include "EngineBridge.h"
+#include <assert.h>
+
+//ShaderManager is a singleton where shaders
+//need to be loaded in before they are used.
+//shaders are stored in a map by name(key) and
+//are stored in different maps according to which
+//shader it is.
+//This is done in order to optimize the DirectX Draw()
+//step so that device context does not need to be reset
+//multiple times per shader.
+//All shaders to be used during runtime should be
+//loaded in using the LoadResources() function in the
+//KrobusEngine.cpp main class.
 
 ShaderManager* ShaderManager::ptrInstance = nullptr;
 
 typedef std::string string;
-//our shaders so far
-const string ShaderManager::DefaultPath = "Shaders/";
-const string ShaderManager::Texture = "textureFlatRender";
-const string ShaderManager::TextureLight = "textureLightRender";
-const string ShaderManager::ColorConstant = "colorConstantRender";
-const string ShaderManager::Color = "colorNoTextureRender";
-const string ShaderManager::ColorLight = "colorNoTextureLightRender";
-const string ShaderManager::VaryColor = "colorVaryRender";
-const string ShaderManager::ColorByPosition = "colorVaryRender";
-const string ShaderManager::Sprite = "spriteRender";
-const string ShaderManager::SpriteLine = "spriteLineRender";
 
 ShaderManager::~ShaderManager() {
-	//delete all shaders we created
-	for (StorageMap::iterator it = storageMap.begin(); it != storageMap.end(); it++)
+	//delete all shaders created
+	for (TextureStorageMap::iterator it = texStorageMap.begin(); it != texStorageMap.end(); it++)
 	{
 		delete it->second;
 	}
-	DebugMsg::out("shaders deleted and now shader manager deleted\n");
+	texStorageMap.clear();
+
+	for (ColorStorageMap::iterator it = colStorageMap.begin(); it != colStorageMap.end(); it++)
+	{
+		delete it->second;
+	}
+	colStorageMap.clear();
+
+	for (TexStorageMap::iterator it = textureStorageMap.begin(); it != textureStorageMap.end(); it++)
+	{
+		delete it->second;
+	}
+	textureStorageMap.clear();
 }
 
-void ShaderManager::privLoad(string name, string render) {
-	StorageMap::iterator it = storageMap.find(name);
+//load shader by name along with the type as defined in the enum class
+void ShaderManager::privLoad(string name, SHADER_TYPES render) {
+	int i = (int)render;
+	if (i == 0) {
+		ColorStorageMap::iterator it = colStorageMap.find(name);
 
-	if (it != storageMap.end()) {
-		DebugMsg::out("ERROR shader Manager: shader key '%s' already in use.\n'", name.c_str());
-		assert(false && "shader key already used");
+		if (it != colStorageMap.end()) {
+			assert(false && "texture shader key already used");
+		}
+		colStorageMap[name] = new ShaderColorLight(EngineBridge::GetDevice());
+	}
+	else if (i == 1) {
+		TextureStorageMap::iterator it = texStorageMap.find(name);
+
+		if (it != texStorageMap.end()) {
+			assert(false && "color shader key already used");
+		}
+		else {
+			texStorageMap[name] = new ShaderMultiPointlight(EngineBridge::GetDevice());
+		}
 	}
 	else {
-		string path = DefaultPath + render;
-		storageMap[name] = new ShaderObject(path.c_str());
-		DebugMsg::out("shader manager: shader '%s' loaded.\n'", name.c_str());
+		TexStorageMap::iterator it = textureStorageMap.find(name);
+
+		if (it != textureStorageMap.end()) {
+			assert(false && "texture_no_light shader key already used");
+		}
+		else {
+			textureStorageMap[name] = new ShaderTexture(EngineBridge::GetDevice());
+		}
 	}
 }
 
-ShaderObject* ShaderManager::privGet(string name) {
-	StorageMap::iterator it = storageMap.find(name);
+//the separate get functions below are in order to assist in optimization
+//of the internal DirectX Draw() step
 
-	if (it == storageMap.end()) {
-		DebugMsg::out("ERROR shader Manager: Unknown shader key '%s'.\n'", name.c_str());
+ShaderMultiPointlight* ShaderManager::privGetTextureShader(string name) {
+	TextureStorageMap::iterator it = texStorageMap.find(name);
+
+	if (it == texStorageMap.end()) {
 		assert(false && "Unknown shader key");
 	}
-	return storageMap[name];
+	return texStorageMap[name];
+}
+
+ShaderColorLight* ShaderManager::privGetColorShader(string name) {
+	ColorStorageMap::iterator it = colStorageMap.find(name);
+
+	if (it == colStorageMap.end()) {
+		assert(false && "Unknown shader key");
+	}
+	return colStorageMap[name];
+}
+
+ShaderTexture* ShaderManager::privGetTexShader(string name) {
+	TexStorageMap::iterator it = textureStorageMap.find(name);
+
+	if (it == textureStorageMap.end()) {
+		assert(false && "Unknown shader key");
+	}
+	return textureStorageMap[name];
 }
 
 void ShaderManager::Terminate() {
