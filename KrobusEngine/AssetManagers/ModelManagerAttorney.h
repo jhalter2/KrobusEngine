@@ -3,6 +3,8 @@
 
 #include "ModelManager.h"
 
+//attorney class to unload models once engine loop ends
+
 class ModelManagerAttorney {
 	friend class KrobusEngine;
 
