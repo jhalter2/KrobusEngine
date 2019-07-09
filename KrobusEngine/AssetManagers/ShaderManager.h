@@ -3,8 +3,12 @@
 
 #include <string>
 #include <map>
+#include "SHADER_TYPES.h"
 
-class ShaderObject;
+class ShaderMultiPointlight;
+class ShaderColorLight;
+class ShaderTexture;
+
 class ShaderManager {
 
 private:
@@ -25,25 +29,27 @@ private:
 	friend class ShaderManagerAttorney;
 
 	typedef std::string string;
-	typedef std::map<string, ShaderObject*> StorageMap;
-	StorageMap storageMap;
+	typedef std::map<string, ShaderMultiPointlight*> TextureStorageMap;
+	TextureStorageMap texStorageMap;
 
-	void privLoad(string name, string render);
-	ShaderObject* privGet(string name);
+	typedef std::map<string, ShaderColorLight*> ColorStorageMap;
+	ColorStorageMap colStorageMap;
+
+	typedef std::map<string, ShaderTexture*> TexStorageMap;
+	TexStorageMap textureStorageMap;
+
+	void privLoad(string name, SHADER_TYPES render);
+	ShaderMultiPointlight* privGetTextureShader(string name);
+	ShaderColorLight* privGetColorShader(string name);
+	ShaderTexture* privGetTexShader(string name);
 
 	static void Terminate();
 
 public:
 	static const string DefaultPath;
-	static const string Texture;
 	static const string TextureLight;
-	static const string ColorConstant;
-	static const string Color;
 	static const string ColorLight;
-	static const string VaryColor;
-	static const string ColorByPosition;
-	static const string Sprite;
-	static const string SpriteLine;
+	static const string Texture;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static void ShaderManager::Load(string name, string render)
@@ -80,7 +86,7 @@ public:
 	/// \param	render	The render.
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	static void Load(string name, string render) { Instance().privLoad(name, render); };
+	static void Load(string name, SHADER_TYPES render) { Instance().privLoad(name, render); };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static ShaderObject* ShaderManager::Get(string name)
@@ -103,7 +109,9 @@ public:
 	/// \returns	Null if it fails, else a pointer to a ShaderObject.
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	static ShaderObject* Get(string name) { return Instance().privGet(name); };
+	static ShaderMultiPointlight* GetTextureShader(string name) { return Instance().privGetTextureShader(name); };
+	static ShaderColorLight* GetColorShader(string name) { return Instance().privGetColorShader(name); };
+	static ShaderTexture* GetTexShader(string name) { return Instance().privGetTexShader(name); };
 };
 
-#endif
+#endif _ShaderManager
