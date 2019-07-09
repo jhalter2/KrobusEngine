@@ -5,10 +5,15 @@
 #include "TimeManager.h"
 #include "AlarmableAttorney.h"
 
+//Manager for processing any alarms.
+//Gets called during every engine Update loop
+//to check if any alarms should be triggered
 AlarmableManager::~AlarmableManager() {
 	DebugMsg::out("alarmable manager deleted \n");
 }
 
+//ProcessAlarms() gets called from engine Update() and
+//checks current time vs alarm time in an ordered list
 void AlarmableManager::ProcessAlarms() {
 	TimeLineMap::iterator it;
 	it = timeline.begin();
