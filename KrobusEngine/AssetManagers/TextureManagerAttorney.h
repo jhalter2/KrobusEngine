@@ -3,6 +3,8 @@
 
 #include "TextureManager.h"
 
+//attorney that unloads all textures once game engine loop ends
+
 class TextureManagerAttorney {
 	friend class KrobusEngine;
 
