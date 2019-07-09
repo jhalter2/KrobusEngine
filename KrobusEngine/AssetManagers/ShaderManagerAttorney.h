@@ -3,6 +3,7 @@
 
 #include "ShaderManager.h"
 
+//attorney for unloading shaders at the end of the engine loop
 class ShaderManagerAttorney {
 	friend class KrobusEngine;
 
