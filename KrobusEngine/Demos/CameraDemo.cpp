@@ -1,13 +1,8 @@
 #include "CameraDemo.h"
 #include "Frigate.h"
 #include "WorldPlane.h"
-#include "AzulCore.h"
-#include "KeyStateTest.h"
-#include "KeyPressTester.h"
 #include "CameraManager.h"
-#include "FreezeTime.h"
 #include "BulletFactory.h"
-#include "CollisionManager.h"
 #include "FlyingCamera.h"
 
 ///this demo shows off the use of the camera, especially for debugging
