@@ -3,6 +3,8 @@
 
 #include "Alarmable.h"
 
+//attorney code for wrapper access
+
 class AlarmableAttorney {
 public:
 	class Registration {
