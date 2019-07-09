@@ -3,7 +3,7 @@
 
 #include <string>
 #include <map>
-#include "AzulCore.h"
+#include "Model.h"
 
 class ModelManager {
 
@@ -27,7 +27,7 @@ private:
 	typedef std::string string;
 	typedef std::map<string, Model*> StorageMap;
 	void privLoad(string name, string model);
-	void privLoad(string name, Model premade);
+	void privLoad(string name, Model::PreMadeModels premade);
 	Model* privGet(string name);
 
 	StorageMap storageMap;
@@ -40,8 +40,10 @@ public:
 	static const string Plane;
 	static const string Frigate;
 	static const string Cottage;
-	static const string Player;
-	static const string Enemy;
+	static const string Tank;
+	static const string Missile;
+	static const string BoundingSphere;
+	static const string BoundingBox;
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static void ModelManager::Load(string name, string model)
@@ -76,7 +78,7 @@ public:
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	static void Load(string name, string model) { Instance().privLoad(name, model); };
-	static void Load(string name, Model premade) { Instance().privLoad(name, premade); };
+	static void Load(string name, Model::PreMadeModels premade) { Instance().privLoad(name, premade); };
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static Model* ModelManager::Get(string name)
@@ -105,4 +107,5 @@ public:
 };
 
 #endif _ModelManager
+
 
