@@ -2,9 +2,9 @@
 #include "Alarmable.h"
 #include "AlarmableAttorney.h"
 
-//deregistration command for alarm command system.
-//processed through AlarmManager which is called during
-//engine Update Loop
+//deregistration class for AlarmCommand system.
+//AlarmManager has list of commands to execute and are
+//processed when engine Update loop is called
 
 AlarmDeregistrationCommand::AlarmDeregistrationCommand(Alarmable* al, AlarmableManager::ALARM_ID id) : ptrAl(al), al_id(id) {}
 
