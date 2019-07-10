@@ -1,12 +1,12 @@
+//Alarmable is one of the base classes for the GameObject class.
+//Alarmable allows the object to be registered for the timer/alarm
+//system to process time-based events. 
+
 #include "Alarmable.h"
 #include "RegistrationState.h"
 #include "SceneManager.h"
 #include "Scene.h"
 #include "SceneAttorney.h"
-
-//Alarmable is one of the base classes for the GameObject class.
-//Alarmable allows the object to be registered for the timer/alarm
-//system to process time-based events. 
 
 Alarmable::Alarmable() {
 	for (int i = 0; i < AlarmableManager::ALARM_NUMBER; i++) {
