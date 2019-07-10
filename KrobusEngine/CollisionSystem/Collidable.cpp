@@ -6,6 +6,15 @@
 #include "CollisionVolumeBSphere.h"
 #include "CollisionVolumeOBB.h"
 
+//base class which GameObject class derives from.
+//collidable is the class which allows GameObjects
+//to register for the collision system.
+//Methods are included for the user to set the CollisionModel
+//that will be used for the object based on the 3 types
+//of collision model available - 
+//bounding sphere, object oriented bounding box,
+//and axis aligned bounding box
+
 Collidable::Collidable() {
 	RegStateCurr = RegistrationState::CURRENTLY_DEREGISTERED;
 	pRegistrationCmd = new CollisionRegistrationCommand(this);
@@ -41,10 +50,12 @@ void Collidable::SubmitCollisionDeregistration() {
 	RegStateCurr = RegistrationState::PENDING_DEREGISTRATION;
 }
 
+//used by many internal methods for collision calculation
 const CollisionVolume& Collidable::GetCollisionVolume() {
 	return *ColVolume;
 }
 
+//user chooses collider model based on volume and model
 void Collidable::SetColliderModel(Model* m , COLLISION_VOLUMES c) {
 	int i = (int)c;
 	pColModel = m;
@@ -53,6 +64,8 @@ void Collidable::SetColliderModel(Model* m , COLLISION_VOLUMES c) {
 	else ColVolume = new CollisionVolumeOBB();
 }
 
+//automatically called to update collision data
+//on the backend
 void Collidable::UpdateCollisionData(Matrix& t, const float scale) {
 	ColVolume->ComputeData(pColModel, t, scale);
 }
