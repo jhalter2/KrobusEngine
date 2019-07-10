@@ -6,6 +6,7 @@
 #include "CollisionDispatch.h"
 #include "CollisionTestPairCommand.h"
 #include "CollisionTestSelfCommand.h"
+#include "CollisionTestTerrainCommand.h"
 
 class CollisionTestCommandBase;
 class CollidableGroup;
@@ -38,6 +39,11 @@ private:
 	using CollisionTestCommands = std::list<CollisionTestCommandBase*>;
 	CollisionTestCommands colTestCommands;
 
+	//need a collection of aabb that will be updated per collidable group
+	//using CollidableAABBCollection = std::vector<CollisionVolumeAABB*>;
+	//CollidableAABBCollection colAABBCollection;
+	//update the aabbs in the collidable groups
+	void UpdateGroupAABB();
 public:
 	//setting id for object groups
 	template <typename C>
@@ -46,7 +52,7 @@ public:
 
 		SetGroupForTypeID(myTypeID);
 
-		DebugMsg::out("Type ID: %i\n", myTypeID);
+		//DebugMsg::out("Type ID: %i\n", myTypeID);
 		return myTypeID;
 	}
 
@@ -113,6 +119,16 @@ public:
 
 		colTestCommands.push_back(new CollisionTestSelfCommand(pg3, pDispatch));
 	}
+
+	//terrain collision
+	template< typename C4>
+	void SetCollisionTerrain()
+	{
+		CollidableGroup* pg4 = ColGroupCollection[GetTypeID<C4>()];
+
+		colTestCommands.push_back(new CollisionTestTerrainCommand(pg4));
+	}
 };
 
 #endif _CollisionManager
+
