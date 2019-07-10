@@ -11,7 +11,7 @@ public:
 	CollisionVolumeBSphere() = default;
 	CollisionVolumeBSphere(const CollisionVolumeBSphere& other);
 	CollisionVolumeBSphere& operator=(const CollisionVolumeBSphere& other);
-	~CollisionVolumeBSphere();
+	~CollisionVolumeBSphere() = default;
 
 	void ComputeData(Model* mod, Matrix& mat, const float scale) override;
 	void DebugView(const Vect& col) const override;
