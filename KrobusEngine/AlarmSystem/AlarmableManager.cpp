@@ -1,3 +1,7 @@
+//Manager for processing any alarms.
+//Gets called during every engine Update loop
+//to check if any alarms should be triggered
+
 #include "AlarmableManager.h"
 #include "Alarmable.h"
 #include "AzulCore.h"
@@ -5,9 +9,6 @@
 #include "TimeManager.h"
 #include "AlarmableAttorney.h"
 
-//Manager for processing any alarms.
-//Gets called during every engine Update loop
-//to check if any alarms should be triggered
 AlarmableManager::~AlarmableManager() {
 	DebugMsg::out("alarmable manager deleted \n");
 }
