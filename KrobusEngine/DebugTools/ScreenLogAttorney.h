@@ -1,3 +1,5 @@
+//clears out any queued text and deleted
+//the singleton when the engine is shut down
 #ifndef _ScreenLogAttorney
 #define _ScreenLogAttorney
 
