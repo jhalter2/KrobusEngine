@@ -1,10 +1,10 @@
-#include "AlarmRegistrationCommand.h"
-#include "Alarmable.h"
-#include "AlarmableAttorney.h"
-
 //registration class for AlarmCommand system.
 //AlarmManager has list of commands to execute and are
 //processed when engine Update loop is called
+
+#include "AlarmRegistrationCommand.h"
+#include "Alarmable.h"
+#include "AlarmableAttorney.h"
 
 AlarmRegistrationCommand::AlarmRegistrationCommand(Alarmable* al, AlarmableManager::ALARM_ID id) : ptrAl(al), al_id(id), 
 	al_time(AlarmableAttorney::Registration::GetTime(al)) {}
