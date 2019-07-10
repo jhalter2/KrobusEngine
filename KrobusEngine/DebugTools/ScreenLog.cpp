@@ -1,3 +1,7 @@
+//singleton debug class. Screen log allows text to be
+//displayed to the screen. This can be called or added by the
+//user at any point by referencing the singleton log
+
 #include "ScreenLog.h"
 #include <cstdarg>
 #include "SpriteFont.h"
