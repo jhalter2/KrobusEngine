@@ -1,15 +1,15 @@
-#include "CameraManager.h"
-#include "Camera.h"
-#include "KrobusEngine.h"
-#include "EngineBridge.h"
-#include "GameObject.h"
-
 //camera manager class needs to be setup by
 //the user at the scene level if they want to
 //use cameras within their scene. A default 3D and
 //2D camera are automatically set up for the user
 //to access and reference. The user also has the option
 //to setup their own new camera from the camera class
+
+#include "CameraManager.h"
+#include "Camera.h"
+#include "KrobusEngine.h"
+#include "EngineBridge.h"
+#include "GameObject.h"
 
 CameraManager::CameraManager() {
 	//setting up default 3D camera 
