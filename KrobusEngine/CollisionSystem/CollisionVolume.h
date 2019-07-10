@@ -1,14 +1,20 @@
+//base class used by collision volumes.
+//holds visit functions for collision testing
+//based on derived types
+
 #ifndef _CollisionVolume
 #define _CollisionVolume
 
-class Model;
-class Matrix;
-class Vect;
+#include "Vect.h"
+#include "Matrix.h"
+#include "Model.h"
+#include "Align16.h"
+
 class CollisionVolumeBSphere;
 class CollisionVolumeAABB;
 class CollisionVolumeOBB;
 
-class CollisionVolume {
+class CollisionVolume : public Align16 {
 public:
 	CollisionVolume() = default;
 	CollisionVolume(const CollisionVolume&) = delete;
@@ -24,3 +30,4 @@ public:
 };
 
 #endif _CollisionVolume
+
