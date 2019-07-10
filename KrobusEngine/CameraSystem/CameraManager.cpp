@@ -1,46 +1,40 @@
-#include "AzulCore.h"
 #include "CameraManager.h"
+#include "Camera.h"
 #include "KrobusEngine.h"
+#include "EngineBridge.h"
 #include "GameObject.h"
 
+//camera manager class needs to be setup by
+//the user at the scene level if they want to
+//use cameras within their scene. A default 3D and
+//2D camera are automatically set up for the user
+//to access and reference. The user also has the option
+//to setup their own new camera from the camera class
+
 CameraManager::CameraManager() {
-	//setting up default 3D camera
-	DefaultCamera = new Camera(Camera::Type::PERSPECTIVE_3D);
-	DefaultCamera->setViewport(0, 0, KrobusEngine::GetWidth(), KrobusEngine::GetHeight());
-	DefaultCamera->setPerspective(35.0f, float(KrobusEngine::GetWidth()) / float(KrobusEngine::GetHeight()), 1.0f, 5000.0f);
-
-	// Orient 3D Camera
-	Vect up3DCam(0.0f, 1.0f, 0.0f);
-	Vect pos3DCam(50.0f, 50.0f, 150.0f);
-	Vect lookAt3DCam(0.0f, 0.0f, 0.0f);
-
-	//set the 3D camera to its position and pointing toward the target
-	DefaultCamera->setOrientAndPosition(up3DCam, pos3DCam, pos3DCam);
+	//setting up default 3D camera 
+	DefaultCamera = new Camera();
+	DefaultCamera->setPerspective(DefaultFOV, EngineBridge::GetWidth() / (float)EngineBridge::GetHeight(), NearDist, FarDist);
+	DefaultCamera->setOrientAndPosition(Vect(0, 1, 0), Vect(0, 0, 0), Vect(0, 3, -5));
 	DefaultCamera->updateCamera();
 
 	camCurrent = DefaultCamera;
+	EngineBridge::SetCamera(*camCurrent);
 
-	//setting up 2D camera
-	pCam2D = new Camera(Camera::Type::ORTHOGRAPHIC_2D);
+	//setting up 2D camera for orthographic view
+	pCam2D = new Camera();
+	
+	pCam2D->setPerspective(DefaultFOV, EngineBridge::GetWidth() / (float)EngineBridge::GetHeight(), NearDist, FarDist);
+	pCam2D->setOrthographic(-0.5f*float(EngineBridge::GetWidth()), 0.5f*float(EngineBridge::GetWidth()),
+		-0.5f*float(EngineBridge::GetHeight()), 0.5f*float(EngineBridge::GetHeight()), NearDist, FarDist);
 
-	pCam2D->setViewport(0, 0, KrobusEngine::GetWidth(), KrobusEngine::GetHeight());
-	pCam2D->setOrthographic(-0.5f*float(KrobusEngine::GetWidth()), 0.5f*float(KrobusEngine::GetWidth()),
-		-0.5f*float(KrobusEngine::GetHeight()), 0.5f*float(KrobusEngine::GetHeight()), 1.0f, 1000.0f);
-
-	Vect up2DCam(0.0f, 1.0f, 0.0f);
-	Vect pos2DCam(0.0f, 0.0f, 0.0f);
-	Vect lookAt2DCam(0.0f, 0.0f, -1.0f);
-	//set 2D camera to its position then update it
-	pCam2D->setOrientAndPosition(up2DCam, lookAt2DCam, pos2DCam);
+	pCam2D->setOrientAndPosition(Vect(0, 1, 0), Vect(0, 0, 0), Vect(0, 0, -1));
 	pCam2D->updateCamera();
+	EngineBridge::Set2DCamera(*pCam2D);
 }
 
 CameraManager::~CameraManager() {
-	delete DefaultCamera;
-	DebugMsg::out("camera manager deleted\n");
-}
-
-void CameraManager::Delete() {
+	delete pCam2D;
 	if (DefaultCamera != camCurrent) {
 		delete camCurrent;
 		delete DefaultCamera;
@@ -48,16 +42,18 @@ void CameraManager::Delete() {
 	else {
 		delete DefaultCamera;
 	}
+	//OutputDebugStringA("camera manager deleted\n");
 }
 
-Camera* CameraManager::GetCurrentCamera() {
+Camera* CameraManager::GetCurrentCamera() const {
 	return camCurrent;
 }
 
-Camera* CameraManager::GetCurrent2DCamera() {
+Camera* CameraManager::Get2DCamera() const { 
 	return pCam2D;
 }
 
+//set a new camera once created
 void CameraManager::SetCurrentCamera(Camera* newcam) {
 	camCurrent = newcam;
 }
