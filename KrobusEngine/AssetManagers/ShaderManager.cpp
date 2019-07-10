@@ -1,11 +1,3 @@
-#include "ShaderManager.h"
-#include "ShaderBase.h"
-#include "ShaderMultiPointlight.h"
-#include "ShaderColorLight.h"
-#include "ShaderTexture.h"
-#include "EngineBridge.h"
-#include <assert.h>
-
 //ShaderManager is a singleton where shaders
 //need to be loaded in before they are used.
 //shaders are stored in a map by name(key) and
@@ -17,6 +9,14 @@
 //All shaders to be used during runtime should be
 //loaded in using the LoadResources() function in the
 //KrobusEngine.cpp main class.
+
+#include "ShaderManager.h"
+#include "ShaderBase.h"
+#include "ShaderMultiPointlight.h"
+#include "ShaderColorLight.h"
+#include "ShaderTexture.h"
+#include "EngineBridge.h"
+#include <assert.h>
 
 ShaderManager* ShaderManager::ptrInstance = nullptr;
 
