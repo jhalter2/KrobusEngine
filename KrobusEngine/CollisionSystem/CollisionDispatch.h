@@ -1,3 +1,13 @@
+//collision disptach class used once collision
+//is detected between two collidable objects.
+//
+//the collision system utilizes templates in order
+//for the user to register different types of objects
+//for collision testing. The dispatch command gets called
+//when collision is detected between two collidables,
+//and then they get upcasted to their original type
+//in order to call their collision functions
+
 #ifndef _CollisionDispatch
 #define _CollisionDispatch
 
