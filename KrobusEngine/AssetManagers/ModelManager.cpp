@@ -1,14 +1,14 @@
-#include "ModelManager.h"
-#include "EngineBridge.h"
-#include "d3dUtil.h"
-#include <assert.h>
-
 //ModelManager is a singleton where models
 //need to be loaded in before they are used.
 //Models are stored in a map by name(key)
 //All models to be used during runtime should be
 //loaded in using the LoadResources() function in the
 //KrobusEngine.cpp main class.
+
+#include "ModelManager.h"
+#include "EngineBridge.h"
+#include "d3dUtil.h"
+#include <assert.h>
 
 ModelManager* ModelManager::ptrInstance = nullptr;
 
