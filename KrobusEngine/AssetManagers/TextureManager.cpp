@@ -1,14 +1,14 @@
-#include "TextureManager.h"
-#include "EngineBridge.h"
-#include "Texture.h"
-#include <assert.h>
-
 //TextureManager is a singleton where textures
 //need to be loaded in before they are used.
 //Textures are stored in a map by name(key)
 //All textures to be used during runtime should be
 //loaded in using the LoadResources() function in the
 //KrobusEngine.cpp main class.
+
+#include "TextureManager.h"
+#include "EngineBridge.h"
+#include "Texture.h"
+#include <assert.h>
 
 TextureManager* TextureManager::ptrInstance = nullptr;
 
