@@ -1,7 +1,6 @@
 #ifndef _Inputable
 #define _Inputable
 
-#include "AzulCore.h"
 #include <list>
 
 enum class EVENT_TYPE;
@@ -60,7 +59,7 @@ private:
 	/// \date	3/4/2019
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	virtual void KeyPressed(AZUL_KEY k);
+	virtual void KeyPressed(char k);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	virtual void Inputable::Released(AZUL_KEY k)
@@ -95,16 +94,16 @@ private:
 	/// \date	3/4/2019
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	virtual void KeyReleased(AZUL_KEY k);
+	virtual void KeyReleased(char k);
 
 	friend class InputableAttorney;
 
-	AZUL_KEY key;
+	char key;
 	EVENT_TYPE ev;
 protected:
-	void SceneRegistration(AZUL_KEY k, EVENT_TYPE e);
-	void SceneDeregistration(AZUL_KEY k, EVENT_TYPE e);
-	void SubmitKeyRegistration(AZUL_KEY k, EVENT_TYPE e);
-	void SubmitKeyDeregistration(AZUL_KEY k, EVENT_TYPE e);
+	void SceneRegistration(char k, EVENT_TYPE e);
+	void SceneDeregistration(char k, EVENT_TYPE e);
+	void SubmitKeyRegistration(char k, EVENT_TYPE e);
+	void SubmitKeyDeregistration(char k, EVENT_TYPE e);
 };
 #endif _Inputable
