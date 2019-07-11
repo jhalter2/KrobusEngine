@@ -1,24 +1,31 @@
-#include "AzulCore.h"
+//The core engine file. Contains all the necessary
+//setup and closing functions for the program to
+//properly functions. The engine exists within a
+//DirectX framework and the start and end are called
+//from there. The Update loop is contained here
+//and is called from the DirectX part of the program.
+//
+//NOTE: The engine manages nothing of DirectX or graphics
+//itself. The engine and directx portions are completely
+//encapsulated from each other and only connect through the
+//EngineBridge class
+
 #include "KrobusEngine.h"
 #include "ShaderManagerAttorney.h"
 #include "TextureManagerAttorney.h"
 #include "ModelManagerAttorney.h"
+#include "EngineBridge.h"
 #include "SceneManager.h"
 #include "SceneManagerAttorney.h"
-#include "TimeManager.h"
 #include "TimeManagerAttorney.h"
-#include "VisualizerAttorney.h"
-#include "ImageManagerAttorney.h"
-#include "SpriteFontManagerAttorney.h"
-#include "ScreenLogAttorney.h"
-#include "EnemyFactoryAttorney.h"
-#include "EnemyManagerAttorney.h"
+#include "TerrainManagerAttorney.h"
+#include <time.h>
 
 KrobusEngine* KrobusEngine::ptrInstance = nullptr;
 
 //-----------------------------------------------------------------------------
 // Game::Initialize()
-//		Allows the engine to perform any initialization it needs to before 
+//	Allows the engine to perform any initialization it needs to before 
 //      starting to run.  This is where it can query for any required services 
 //      and load any non-graphic related content. 
 //-----------------------------------------------------------------------------
@@ -29,8 +36,8 @@ void KrobusEngine::Initialize()
 
 //-----------------------------------------------------------------------------
 // Game::LoadContent()
-//		Allows you to load all content needed for your engine,
-//	    such as objects, graphics, etc.
+//	Allows you to load all content needed for your game,
+//	such as objects, graphics, etc.
 //-----------------------------------------------------------------------------
 void KrobusEngine::LoadContent()
 {
@@ -52,15 +59,13 @@ void KrobusEngine::Update()
 
 //-----------------------------------------------------------------------------
 // Game::Draw()
-//		This function is called once per frame
-//	    Use this for draw graphics to the screen.
+//	This function is called once per frame
+//	Use this for draw graphics to the screen.
 //      Only do rendering here
 //-----------------------------------------------------------------------------
 void KrobusEngine::Draw()
 {
 	SceneManagerAttorney::Draw();
-	ScreenLogAttorney::Render();
-	VisualizerAttorney::VisualizeAll();
 }
 
 //-----------------------------------------------------------------------------
@@ -75,41 +80,29 @@ void KrobusEngine::UnLoadContent()
 	ModelManagerAttorney::Terminate();
 	SceneManagerAttorney::Terminate();
 	TimeManagerAttorney::Terminate();
-	VisualizerAttorney::Terminate();
-	ImageManagerAttorney::Terminate();
-	SpriteFontManagerAttorney::Terminate();
-	ScreenLogAttorney::Terminate();
+	TerrainManagerAttorney::Terminate();
 }
 
-void KrobusEngine::Run() {
-	Instance().run();
-}
-
-int KrobusEngine::GetWidth() {
-	return Instance().getWidth();
-}
-
-int KrobusEngine::GetHeight() {
-	return Instance().getHeight();
-}
-
-float KrobusEngine::GetTimeSeconds() {
+int KrobusEngine::GetTimeSeconds() {
+	//public method for managers/users to use
 	return Instance().GetTimeInSeconds();
 }
 
-void KrobusEngine::SetClear(float r, float g, float b, float a) {
-	Instance().SetClearColor(r, g, b, a);
+int KrobusEngine::GetTimeInSeconds() {
+	//private method for generating time
+	time_t seconds;
+
+	seconds = time(NULL);
+	return (int)seconds;
 }
 
-void KrobusEngine::SetWidthHeight(int w, int h) {
-	Instance().setWidthHeight(w, h);
-}
-
-void KrobusEngine::SetWindowName(const char* name) {
-	Instance().setWindowName(name);
+void KrobusEngine::Run() {
+	Instance().LoadContent();
+	Instance().Initialize();
 }
 
 void KrobusEngine::Terminate() {
+	Instance().UnLoadContent();
 	delete ptrInstance;
 	ptrInstance = nullptr;
 }
