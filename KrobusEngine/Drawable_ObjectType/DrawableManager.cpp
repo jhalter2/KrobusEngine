@@ -1,20 +1,16 @@
+//central manager for processing draw commands.
+//any objects registered for Drawing on the screen
+//will have their Draw functions called here. The
+//draw update is called from the engine Update loop
+
 #include "DrawableManager.h"
 #include "Drawable.h"
-#include "AzulCore.h"
 #include "DrawableAttorney.h"
 
-DrawableManager::~DrawableManager() {
-	DebugMsg::out("drawable manager deleted\n");
-}
-
 void DrawableManager::ProcessElements() {
-	//draw 3d elements
+	//draw elements
 	for (StorageList::iterator it = storageList.begin(); it != storageList.end(); it++) {
 		DrawableAttorney::GameLoop::Draw(*it);
-	}
-	//draw 2d elements
-	for (StorageList::iterator it = storageList.begin(); it != storageList.end(); it++) {
-		DrawableAttorney::GameLoop::Draw2D(*it);
 	}
 }
 
