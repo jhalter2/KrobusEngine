@@ -1,3 +1,6 @@
+//calls user defined method ConnectToScene() when a game object
+//enters a scene
+
 #include "GameObjectEntryCommand.h"
 #include "GameObject.h"
 
