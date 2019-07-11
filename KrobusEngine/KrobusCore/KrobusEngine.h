@@ -1,17 +1,16 @@
 #ifndef KROBUSENGINE_H
 #define KROBUSENGINE_H
 
-#include "AzulCore.h"
+#include "Align16.h"
 
-class KrobusEngine : public Engine
-{
+class KrobusEngine : public Align16 {
 private:
 	static KrobusEngine* ptrInstance;
 
 	KrobusEngine() = default;
 	KrobusEngine(const KrobusEngine&) = delete;
 	KrobusEngine& operator=(const KrobusEngine&) = delete;
-	//~KrobusEngine();
+	~KrobusEngine() = default;
 
 	static KrobusEngine& Instance() {
 		if (!ptrInstance)
@@ -24,7 +23,14 @@ private:
 	virtual void Update();
 	virtual void Draw();
 	virtual void UnLoadContent();
+	void Run();
+	void Terminate();
 
+	friend class KrobusAttorney;
+	static void CallRun() { Instance().Run(); }
+	static void CallUpdate() { Instance().Update(); }
+	static void CallDraw() { Instance().Draw(); }
+	static void CallTerminate() { Instance().Terminate(); }
 	//user defined
 	
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -84,11 +90,11 @@ private:
 
 	void GameEnd();
 
-
+	int GetTimeInSeconds();
 public:
-	static void Run();
-	static int GetWidth();
-	static int GetHeight();
+	
+	//static int GetWidth();
+	//static int GetHeight();
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static float KrobusEngine::GetTimeSeconds();
@@ -103,9 +109,9 @@ public:
 	/// \returns	The time seconds.
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	static float GetTimeSeconds();
+	static int GetTimeSeconds();
 	
-	static void SetClear(float r, float g, float b, float a);
+	//static void SetClear(float r, float g, float b, float a);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static void KrobusEngine::SetWidthHeight(int w, int h);
@@ -121,7 +127,7 @@ public:
 	/// \param	h	The height.
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	static void SetWidthHeight(int w, int h);
+	//static void SetWidthHeight(int w, int h);
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 	/// \fn	static void KrobusEngine::SetWindowName(const char* name);
@@ -136,8 +142,8 @@ public:
 	/// \param	name	The name.
 	////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	static void SetWindowName(const char* name);
-	static void Terminate();
+	//static void SetWindowName(const char* name);
 };
 
-#endif
+#endif _KROBUSENGINE_H
+
