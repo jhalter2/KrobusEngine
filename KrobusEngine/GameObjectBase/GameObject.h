@@ -8,10 +8,14 @@
 #include "Collidable.h"
 #include "GameObjectEntryCommand.h"
 #include "GameObjectExitCommand.h"
+#include "Align16.h"
+#include "Matrix.h"
+#include "Vect.h"
+#include "Keyboard.h"
 
 enum class RegistrationState;
 
-class GameObject : public Drawable, public Updatable, public Alarmable, public Inputable, public Collidable {
+class GameObject : public Drawable, public Updatable, public Alarmable, public Inputable, public Collidable, public Align16 {
 public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
