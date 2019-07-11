@@ -2,14 +2,13 @@
 #define _KeyboardEventManager
 
 #include <map>
-#include "AzulCore.h"
 #include "SingleKeyEventManager.h"
 
 enum class EVENT_TYPE;
 
 class KeyboardEventManager {
 private:
-	using StorageList = std::map<AZUL_KEY, SingleKeyEventManager*>;
+	using StorageList = std::map<char, SingleKeyEventManager*>;
 	StorageList SingleKeyManagers;
 public:
 	KeyboardEventManager() = default;
@@ -19,8 +18,8 @@ public:
 
 	void ProcessKeyEvents();
 
-	void Register(Inputable* p, AZUL_KEY k, EVENT_TYPE e);
-	void Deregister(Inputable* p, AZUL_KEY k, EVENT_TYPE e);
+	void Register(Inputable* p, char k, EVENT_TYPE e);
+	void Deregister(Inputable* p, char k, EVENT_TYPE e);
 };
 
 #endif _KeyboardEventManager
