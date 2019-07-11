@@ -1,9 +1,15 @@
+//Drawable is one of the base class types that the GameObject
+//class derives from. Any object that needs to be rendered to
+//the screen in any way must be a drawable type object. There 
+//is no difference for Drawables between 2D and 3D. The difference
+//there is just down to which camera the object gets rendered to.
+
 #include "Drawable.h"
 #include "SceneManager.h"
 #include "Scene.h"
-#include "AzulCore.h"
 #include "RegistrationState.h"
 #include "SceneAttorney.h"
+#include <assert.h>
 
 Drawable::Drawable() {
 	RegStateCurr = RegistrationState::CURRENTLY_DEREGISTERED;
