@@ -1,3 +1,6 @@
+//calls user defined DisconnectFromScene()
+//when an object needs to leave the scene
+
 #include "GameObjectExitCommand.h"
 #include "GameObject.h"
 
