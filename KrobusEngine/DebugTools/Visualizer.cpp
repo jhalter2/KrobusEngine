@@ -1,3 +1,11 @@
+//debug tool. visualizes spheres and cubes
+//around objects to simulate their collision volume.
+//also lets the user select which color to show. This
+//is very useful for testing my collision system but also
+//for the user to check their collision volume and 
+//determine what changes they need to meet the level of
+//precision they want
+
 #include "Visualizer.h"
 #include "Colors.h"
 #include "ModelManager.h"
@@ -16,7 +24,7 @@ Visualizer::Visualizer() {
 
 Visualizer::~Visualizer() {
 	delete Instance().WFUnitSphere;
-	DebugMsg::out("deleted visualizer singleton\n");
+	//DebugMsg::out("deleted visualizer singleton\n");
 	delete WFUnitSphere;
 }
 
